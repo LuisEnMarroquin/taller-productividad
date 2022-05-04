@@ -1,10 +1,22 @@
-import { useState } from "react";
+import { useRef, useState, useEffect, forwardRef } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 
+const ValRef = forwardRef<HTMLDivElement, { value: string }>(
+  ({ value }, ref) => {
+    return (
+      <Box ref={ref} component="li">
+        {value}
+      </Box>
+    );
+  }
+);
+
 function App() {
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const [chats, setChats] = useState<string[]>([]);
 
   const [name, setName] = useState("");
@@ -14,10 +26,14 @@ function App() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log("xd", event.target.value);
+    console.log("xd0", event.target.value);
     setChats((current) => [...current, name]);
     setName("");
   };
+
+  useEffect(() => {
+    console.log("xd1", cardRef.current);
+  }, [chats]);
 
   return (
     <Container>
@@ -27,9 +43,7 @@ function App() {
       <Box sx={{ py: "10px" }}>
         <ul>
           {chats.map((value, index) => (
-            <Box component="li" key={index}>
-              {value}
-            </Box>
+            <ValRef value={value} key={index} ref={cardRef} />
           ))}
         </ul>
       </Box>
